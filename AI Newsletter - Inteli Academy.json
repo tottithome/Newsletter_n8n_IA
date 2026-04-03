@@ -1,0 +1,657 @@
+{
+  "name": "AI Newsletter - Inteli Academy",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://dev.to/api/articles",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "tag",
+              "value": "ai"
+            },
+            {
+              "name": "per_page",
+              "value": "10"
+            },
+            {
+              "name": "top",
+              "value": "7"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5f1443e1-b5d4-4ec5-a350-1d41bb7e8b54",
+      "name": "Dev.to",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://export.arxiv.org/api/query",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "search_query",
+              "value": "cat:cs.AI OR cat:cs.LG"
+            },
+            {
+              "name": "sortBy",
+              "value": "submittedDate"
+            },
+            {
+              "name": "sortOrder",
+              "value": "descending"
+            },
+            {
+              "name": "max_results",
+              "value": "10"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "10909644-1227-4634-ab52-0eb11a632837",
+      "name": "arXiv",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"<SUA_TAVILY_KEY>\",\n  \"query\": \"latest AI news this week\",\n  \"search_depth\": \"basic\",\n  \"max_results\": 10\n}",
+        "options": {}
+      },
+      "id": "067841f2-a9c1-4080-a55a-95dbc27945fb",
+      "name": "Tavily Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=# MISSÃO DE EXECUÇÃO\nGere a edição de hoje com energia total (Nível 9/10)! \n\n# REGRAS DE SEGURANÇA (PARA NÃO DAR ERRO):\n- Selecione APENAS as 7 notícias mais importantes do dossiê. \n- O texto total deve ser curto para não ultrapassar o limite de caracteres do Telegram.\n- Todos os títulos devem estar em **NEGRITO E MAIÚSCULAS**.\n\n# ESTRUTURA:\n🚀 **ACADEMYLETTER: [NOME DA EDIÇÃO EM MAIÚSCULAS]**\n(Intro de 2 linhas)\n\n---\n🌟 **DESTAQUE PRINCIPAL**\n**[TÍTULO EM MAIÚSCULAS]**\n(Resumo de 3 linhas)\n[Ler notícia completa](URL)\n\n---\n📌 **GIRO TECH**\n(Liste as outras 6 notícias selecionadas com TÍTULO EM MAIÚSCULAS, resumo de 2 linhas e o link no formato Markdown).\n\n---\n👋 **ATÉ A PRÓXIMA! (e uma frase de ate 10 palavras que relacione as noticias com:[E acompanhe o Inteli Academy])**\n\n# DOSSIÊ:\n{{ $json.resultado_formatado }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "systemMessage": "=És um editor-chefe sénior de uma newsletter tecnológica de topo, focada em inteligencia artificial e tecnologia, formada por membros do inteli (instituto de tecnologia e liderança)\nA tua missão é analisar um dossiê de notícias brutas de várias fontes e transformá-las numa newsletter diária/semanal altamente cativante, fácil de ler e desenhada para ser lida no telemóvel (Telegram).\n\nREGRAS ABSOLUTAS:\n1. NÃO inventes factos, notícias, nomes ou links (Zero Alucinação). Baseia-te ESTRITAMENTE nos dados fornecidos.\n2. Escreve em Português do Brasil (PT-BR) de forma coloquial, inteligente e engajadora.\n3. Se um link for fornecido, tens de o incluir no formato Markdown: [Ler notícia completa](URL).\n4. Otimiza para leitura em ecrãs pequenos: parágrafos curtos, uso estratégico de negrito (**texto**) e emojis para separar categorias.\n5. Foco total em noticias relacionadas com IA e Tecnologia"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        320
+      ],
+      "id": "09b857e4-08dc-4bc9-9a7d-5e66d261be36",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "Nk7hkWbjK1v0Qoc8",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# APIs de notícias\n##  + padronização dos dados",
+        "height": 912,
+        "width": 400,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        -112
+      ],
+      "typeVersion": 1,
+      "id": "29220f10-f002-4d90-9c91-b191ff339d14",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Juntar tudo e padronizar",
+        "height": 336,
+        "width": 432,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        496,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "0e9286ac-ac34-4c46-9088-91b8fd5d7868",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        192,
+        0
+      ],
+      "id": "1786b1c1-5084-470b-9d1e-6d2fe62bb063",
+      "name": "padroniza arXiv"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84a990f2-de11-4871-b8bf-3ac517a450e0",
+              "name": "articles_PtBr",
+              "value": "={{ $json.articles }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        640
+      ],
+      "id": "08f0dd1d-2d4a-45e6-a8ef-af2851e7fdc0",
+      "name": "Nome saída"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "dev_to_items",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        192,
+        320
+      ],
+      "id": "6dfeda35-df73-4ec8-b615-4e262b405868",
+      "name": "arrumar itens dev.to"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 5,
+        "options": {}
+      },
+      "id": "04f51e88-e206-40cf-b3e4-cf9502e0b0dc",
+      "name": "Juntar tudo",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        576,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Puxa o item consolidado do nó Merge\nconst input = $input.all()[0].json;\n\nlet outputText = \"\";\nlet globalIndex = 0;\n\n// Função padronizada para montar o texto exatamente no seu formato\nfunction addNews(source, title, summary, url) {\n  // Só adiciona se tiver título e link\n  if (title && url) {\n    // Limpa quebras de linha que possam bagunçar o texto\n    let cleanSummary = (summary || '').replace(/\\n/g, ' ').trim();\n    \n    outputText += `${globalIndex}\\n`;\n    outputText += `source:${source}\\n`;\n    outputText += `title:${title}\\n`;\n    outputText += `summary:${cleanSummary}\\n`;\n    outputText += `url:${url}\\n\\n`;\n    \n    globalIndex++;\n  }\n}\n\n// 1. Processar NewsAPI (BR) -> Usando o nome correto: articles_PtBr\nif (input.articles_PtBr && Array.isArray(input.articles_PtBr)) {\n  // Pegando as 5 primeiras notícias (pode alterar o .slice se quiser mais ou menos)\n  input.articles_PtBr.slice(0, 5).forEach(a => addNews(\"NewsAPI (BR)\", a.title, a.description, a.url));\n}\n\n// 2. Processar NewsAPI (USA) -> Usando o nome correto: articles_Geral\nif (input.articles_Geral && Array.isArray(input.articles_Geral)) {\n  input.articles_Geral.slice(0, 5).forEach(a => addNews(\"NewsAPI (USA)\", a.title, a.description, a.url));\n}\n\n// 3. Processar Dev.to -> Usando o nome correto: dev_to_items\nif (input.dev_to_items && Array.isArray(input.dev_to_items)) {\n  input.dev_to_items.slice(0, 5).forEach(a => addNews(\"Dev.to\", a.title, a.description, a.url));\n}\n\n// 4. Processar arXiv (Papers) -> Usando o nome correto: feed.entry\nif (input.feed && input.feed.entry && Array.isArray(input.feed.entry)) {\n  // No arXiv, o resumo chama 'summary' e o link chama 'id'\n  input.feed.entry.slice(0, 5).forEach(a => addNews(\"arXiv\", a.title, a.summary, a.id));\n}\n\n// 5. Processar Tavily Search -> Usando o nome correto: results\nif (input.results && Array.isArray(input.results)) {\n  // No Tavily, o resumo chama 'content'\n  input.results.slice(0, 5).forEach(a => addNews(\"Tavily\", a.title, a.content, a.url));\n}\n\n// Retorna o super bloco de texto formatado para o próximo nó\nreturn [{ \n  json: { \n    resultado_formatado: outputText.trim() \n  } \n}];"
+      },
+      "id": "b672c222-62d2-44d8-9a57-3f496d3c5857",
+      "name": "Formatar todas notícias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        768,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/everything?q=tecnologia&apiKey=<SUA_NEWSAPI_KEY>&language=pt",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "artificial intelligence OR machine learning OR LLM"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "sortBy",
+              "value": "publishedAt"
+            },
+            {
+              "name": "pageSize",
+              "value": "10"
+            },
+            {
+              "name": "apiKey",
+              "value": "SUA_NEWSAPI_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3ea6512-76ac-4782-982a-d09b82e3693b",
+      "name": "NewsAPI-PtBr",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/everything?q=tecnologia&apiKey=<SUA_NEWSAPI_KEY>",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "artificial intelligence OR machine learning OR LLM"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "sortBy",
+              "value": "publishedAt"
+            },
+            {
+              "name": "pageSize",
+              "value": "10"
+            },
+            {
+              "name": "apiKey",
+              "value": "SUA_NEWSAPI_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d9ef3f9f-899d-44cc-8a5e-cd9601153d87",
+      "name": "NewsAPI-Geral",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "84a990f2-de11-4871-b8bf-3ac517a450e0",
+              "name": "articles_Geral",
+              "value": "={{ $json.articles }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        480
+      ],
+      "id": "d161bd42-4f2a-4c42-b02b-d1b3aa435853",
+      "name": "Nome saída1"
+    },
+    {
+      "parameters": {
+        "chatId": "5867828913",
+        "text": "={{ $json.content.parts[0].text }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "c19eb206-1031-496d-b34b-ae1c4348714f",
+      "name": "Telegram - mandar a newsletter",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1648,
+        320
+      ],
+      "webhookId": "2273916f-fdb4-43a2-8874-06c36d18a789",
+      "credentials": {
+        "telegramApi": {
+          "id": "3dKmOLMJGvg8ecCb",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Gemini\n### Profissonal em NewsLetter\n",
+        "height": 336,
+        "width": 336
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1072,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "52d3f96c-1735-470c-a1c0-afaf9a84d20a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        400
+      ],
+      "id": "8df377be-0f7e-4fe4-9ad7-8a28b041bde2",
+      "name": "Gancho Semanal (segundas - 6h00)"
+    },
+    {
+      "parameters": {},
+      "id": "af5b40f7-53b0-4494-aad4-b59dfdb85fa6",
+      "name": "Gancho manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Ganchos\n",
+        "height": 432,
+        "width": 192,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -336,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "29e83dad-2eb6-485b-b6bd-ce6165133158",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Enviar no Telegram\n## @psInteliAcademy_bot",
+        "height": 336,
+        "width": 352,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1536,
+        192
+      ],
+      "typeVersion": 1,
+      "id": "bea34adc-2ac9-4edb-852e-3244f81ad023",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Dev.to": {
+      "main": [
+        [
+          {
+            "node": "arrumar itens dev.to",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "arXiv": {
+      "main": [
+        [
+          {
+            "node": "padroniza arXiv",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tavily Search": {
+      "main": [
+        [
+          {
+            "node": "Juntar tudo",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "padroniza arXiv": {
+      "main": [
+        [
+          {
+            "node": "Juntar tudo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nome saída": {
+      "main": [
+        [
+          {
+            "node": "Juntar tudo",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "arrumar itens dev.to": {
+      "main": [
+        [
+          {
+            "node": "Juntar tudo",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Juntar tudo": {
+      "main": [
+        [
+          {
+            "node": "Formatar todas notícias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar todas notícias": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewsAPI-PtBr": {
+      "main": [
+        [
+          {
+            "node": "Nome saída",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewsAPI-Geral": {
+      "main": [
+        [
+          {
+            "node": "Nome saída1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nome saída1": {
+      "main": [
+        [
+          {
+            "node": "Juntar tudo",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Telegram - mandar a newsletter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gancho manual": {
+      "main": [
+        [
+          {
+            "node": "NewsAPI-Geral",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dev.to",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "arXiv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tavily Search",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NewsAPI-PtBr",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gancho Semanal (segundas - 6h00)": {
+      "main": [
+        [
+          {
+            "node": "arXiv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tavily Search",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dev.to",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NewsAPI-Geral",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "NewsAPI-PtBr",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8df7b65e-d4a3-4802-9f03-bf8b8eb31e49",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1bec0839fa79e465da451f0d343b3a357d32461eb99b446ad09d65071071b995"
+  },
+  "id": "6Pvu0ro9SfiAxIp7",
+  "tags": []
+}
